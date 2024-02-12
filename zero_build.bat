@@ -1,0 +1,2 @@
+dotnet publish
+build_setup_executable.bat
