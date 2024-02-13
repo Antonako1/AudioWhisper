@@ -25,6 +25,7 @@
    - ``` run.bat ```
 
  - Installer (requires [nsis](https://nsis.sourceforge.io/Download)): 
-   - ``` zero_build.bat | build_setup_executable.bat (use dotnet publish) ```
+   - ``` zero_build.bat ```
+   - ``` build_setup_executable.bat (use dotnet publish)  ```
   
  ---

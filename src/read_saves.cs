@@ -13,6 +13,10 @@ class File_reader{
     public File_reader(){
         Read_file();
     }
+    /*
+    Show mute on/off @ Main | Main
+    On background play (oikee alakulma)
+    */
     public void Cli(){     
         bool run_settings = true;
         Read_file(); 
@@ -142,7 +146,7 @@ class File_reader{
 
     private void Console_writing(string what){
         Console.Clear();
-        Console.WriteLine("Currently in:");
+        Console.WriteLine("Hermes | Currently in:");
         switch(what){
             case "editing":
                 Console.WriteLine("Settings | Editing");

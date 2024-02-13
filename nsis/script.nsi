@@ -7,11 +7,11 @@ unicode True
 !define HWND_BROADCAST 0xFFFF
 !define WM_SETTINGCHANGE 0x001A
 
-Outfile "Hermes-Setup.exe"
+Outfile "AudioWhisper-Setup.exe"
 RequestExecutionLevel admin
 
-BrandingText /TRIMCENTER "Hermes 1.0.0 Setup"
-Name "Hermes 1.0.0 Setup"
+BrandingText /TRIMCENTER "AudioWhisper 1.0.0 Setup"
+Name "AudioWhisper 1.0.0 Setup"
 ManifestSupportedOS Win10
 DetailsButtonText "Show progress"
 
@@ -35,83 +35,83 @@ PageEx components
 PageExEnd
 
 SectionGroup "!Main Program" RO
-    Section !Hermes.exe sec1_id
+    Section !AudioWhisper.exe sec1_id
         DetailPrint "These files go to your TEMP folder. These will be deleted after setup."
         SectionInstType ${IT_FULL} ${IT_MIN} RO
         SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_hermes_mic_playback"
-        File "Hermes.exe"
+        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
+        File "AudioWhisper.exe"
     SectionEnd
     Section !license.txt sec7_id
         SectionInstType ${IT_FULL} ${IT_MIN} RO
         SectionIn 1 ${sec1_id}
         File "license.txt"
     SectionEnd
-    Section !Hermes.dll sec2_id
+    Section !AudioWhisper.dll sec2_id
         SectionInstType ${IT_FULL} ${IT_MIN} RO
         SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_hermes_mic_playback"
-        File "Hermes.dll"
+        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
+        File "AudioWhisper.dll"
     SectionEnd
 
-    Section !Hermes.deps.json sec10_id
+    Section !AudioWhisper.deps.json sec10_id
         SectionInstType ${IT_FULL} ${IT_MIN} RO
         SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_hermes_mic_playback"
-        File "Hermes.deps.json"
+        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
+        File "AudioWhisper.deps.json"
     SectionEnd
-    Section !Hermes.runtimeconfig.json sec11_id
+    Section !AudioWhisper.runtimeconfig.json sec11_id
         SectionInstType ${IT_FULL} ${IT_MIN} RO
         SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_hermes_mic_playback"
-        File "Hermes.runtimeconfig.json"
+        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
+        File "AudioWhisper.runtimeconfig.json"
     SectionEnd
     Section !NAudio.Asio.dll sec12_id
         SectionInstType ${IT_FULL} ${IT_MIN} RO
         SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_hermes_mic_playback"
+        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
         File "NAudio.Asio.dll"
     SectionEnd
     Section !NAudio.Core.dll sec13_id
         SectionInstType ${IT_FULL} ${IT_MIN} RO
         SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_hermes_mic_playback"
+        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
         File "NAudio.Core.dll"
     SectionEnd
     Section !NAudio.dll sec14_id
         SectionInstType ${IT_FULL} ${IT_MIN} RO
         SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_hermes_mic_playback"
+        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
         File "NAudio.dll"
     SectionEnd
     Section !NAudio.Midi.dll sec15_id
         SectionInstType ${IT_FULL} ${IT_MIN} RO
         SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_hermes_mic_playback"
+        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
         File "NAudio.Midi.dll"
     SectionEnd
     Section !NAudio.Wasapi.dll sec16_id
         SectionInstType ${IT_FULL} ${IT_MIN} RO
         SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_hermes_mic_playback"
+        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
         File "NAudio.Wasapi.dll"
     SectionEnd
     Section !NAudio.WinMM.dll sec17_id
         SectionInstType ${IT_FULL} ${IT_MIN} RO
         SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_hermes_mic_playback"
+        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
         File "NAudio.WinMM.dll"
     SectionEnd
-    Section !Hermes.ico sec18_id
+    Section !AudioWhisper.ico sec18_id
         SectionInstType ${IT_FULL} ${IT_MIN} RO
         SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_hermes_mic_playback"
-        File "Hermes.ico"
+        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
+        File "AudioWhisper.ico"
     SectionEnd
     Section !save.json sec19_id
         SectionInstType ${IT_FULL} ${IT_MIN} RO
         SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_hermes_mic_playback"
+        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
         File "save.json"
     SectionEnd
 SectionGroupEnd
@@ -127,7 +127,7 @@ PageExEnd
 
 Function .onVerifyInstDir
     Var /GLOBAL ext
-    StrCpy $ext "Hermes"
+    StrCpy $ext "AudioWhisper"
     StrCpy $INSTALL_DIR "$INSTALL_DIR$ext"
     ; Checks if folder already exists
     Call CheckFolder
@@ -156,33 +156,33 @@ PageExEnd
 ; Set the default installation directory
 Function .onInit
     InitPluginsDir
-    StrCpy $INSTALL_DIR $APPDATA\Hermes
+    StrCpy $INSTALL_DIR $APPDATA\AudioWhisper
 FunctionEnd
 
 ############################## START ##############################
 Section 
 ; Delete the $TEMP folder stuff before extracting more files
 ; and taking up more space from the disk
-Delete "$TEMP\temp_hermes_mic_playback\Hermes.exe"
-Delete "$TEMP\temp_hermes_mic_playback\Hermes.dll"
-Delete "$TEMP\temp_hermes_mic_playback\license.txt"
-Delete "$TEMP\temp_hermes_mic_playback\Uninstall.exe"
-Delete "$TEMP\temp_hermes_mic_playback\Setup.ps1"
-Delete "$TEMP\temp_hermes_mic_playback\Uninstall.ps1"
-Delete "$TEMP\temp_hermes_mic_playback\Hermes.deps.json"
-Delete "$TEMP\temp_hermes_mic_playback\Hermes.runtimeconfig.json"
-Delete "$TEMP\temp_hermes_mic_playback\NAudio.Asio.dll"
-Delete "$TEMP\temp_hermes_mic_playback\NAudio.Core.dll"
-Delete "$TEMP\temp_hermes_mic_playback\NAudio.dll"
-Delete "$TEMP\temp_hermes_mic_playback\NAudio.Midi.dll"
-Delete "$TEMP\temp_hermes_mic_playback\NAudio.Wasapi.dll"
-Delete "$TEMP\temp_hermes_mic_playback\NAudio.WinMM.dll"
-Delete "$TEMP\temp_hermes_mic_playback\Hermes.ico"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\AudioWhisper.exe"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\AudioWhisper.dll"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\license.txt"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\Uninstall.exe"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\Setup.ps1"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\Uninstall.ps1"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\AudioWhisper.deps.json"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\AudioWhisper.runtimeconfig.json"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.Asio.dll"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.Core.dll"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.dll"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.Midi.dll"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.Wasapi.dll"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.WinMM.dll"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\AudioWhisper.ico"
 
 ; The folder will be deleted in the Uninstall section
-RMDir /r $TEMP\temp_hermes_mic_playback
+RMDir /r $TEMP\temp_AudioWhisper_mic_playback
 
-DetailPrint 'Files from "$TEMP\temp_hermes_mic_playback" deleted. beginning setup.' 
+DetailPrint 'Files from "$TEMP\temp_AudioWhisper_mic_playback" deleted. beginning setup.' 
 
 ; After deletion begin with setup
 
@@ -258,10 +258,10 @@ ${EndIf}
 
 ########## MAIN PROGRAM ##########
 ${If} ${SectionIsSelected} ${sec1_id}
-    File "Hermes.exe"
+    File "AudioWhisper.exe"
 ${EndIf}
 ${If} ${SectionIsSelected} ${sec2_id}
-    File "Hermes.dll"
+    File "AudioWhisper.dll"
 ${EndIf}
 
 ${If} ${SectionIsSelected} ${sec7_id}
@@ -269,10 +269,10 @@ ${If} ${SectionIsSelected} ${sec7_id}
 ${EndIf}
 
 ${If} ${SectionIsSelected} ${sec10_id}
-    File "Hermes.deps.json"
+    File "AudioWhisper.deps.json"
 ${EndIf}
 ${If} ${SectionIsSelected} ${sec11_id}
-    File "Hermes.runtimeconfig.json"
+    File "AudioWhisper.runtimeconfig.json"
 ${EndIf}
 ${If} ${SectionIsSelected} ${sec12_id}
     File "NAudio.Asio.dll"
@@ -293,14 +293,14 @@ ${If} ${SectionIsSelected} ${sec17_id}
     File "NAudio.WinMM.dll"
 ${EndIf}
 ${If} ${SectionIsSelected} ${sec18_id}
-    File "Hermes.ico"
+    File "AudioWhisper.ico"
 ${EndIf}
 ${If} ${SectionIsSelected} ${sec19_id}
     File "save.json"
 ${EndIf}
 
 # Create shortcut on DESKTOP
-CreateShortcut "$DESKTOP\Hermes.lnk" "$INSTALL_DIR\Hermes.exe" "" "$INSTALL_DIR\Hermes.ico"
+CreateShortcut "$DESKTOP\AudioWhisper.lnk" "$INSTALL_DIR\AudioWhisper.exe" "" "$INSTALL_DIR\AudioWhisper.ico"
 
 ; Create an uninstaller in the same directory as the installer
 WriteUninstaller "$INSTALL_DIR\Uninstall.exe"
@@ -330,28 +330,28 @@ nsExec::ExecToLog 'Powershell.exe -ExecutionPolicy Bypass -File "$INSTDIR\Uninst
 ########################### DELETE FILES ###########################
 ; Remove installed files during uninstallation
 
-Delete "$INSTDIR\Hermes.exe"
+Delete "$INSTDIR\AudioWhisper.exe"
 Delete "$INSTDIR\save.json"
-Delete "$INSTDIR\Hermes.dll"
+Delete "$INSTDIR\AudioWhisper.dll"
 Delete "$INSTDIR\Uninstall.exe"
 Delete "$INSTDIR\license.txt"
 Delete "$INSTDIR\Uninstall.ps1"
 Delete "$INSTDIR\Setup.ps1"
-Delete "$INSTDIR\Hermes.deps.json"
-Delete "$INSTDIR\Hermes.runtimeconfig.json"
+Delete "$INSTDIR\AudioWhisper.deps.json"
+Delete "$INSTDIR\AudioWhisper.runtimeconfig.json"
 Delete "$INSTDIR\NAudio.Asio.dll"
 Delete "$INSTDIR\NAudio.Core.dll"
 Delete "$INSTDIR\NAudio.dll"
 Delete "$INSTDIR\NAudio.Midi.dll"
 Delete "$INSTDIR\NAudio.Wasapi.dll"
 Delete "$INSTDIR\NAudio.WinMM.dll"
-Delete "$INSTDIR\Hermes.ico"
+Delete "$INSTDIR\AudioWhisper.ico"
 Delete "$INSTDIR\save.json"
-Delete "$DESKTOP\Hermes.lnk"
+Delete "$DESKTOP\AudioWhisper.lnk"
 
 ; Remove the installation directory and TEMP directory if it still exists
 RMDir /r $INSTDIR
-RMDir /r $TEMP\temp_hermes_mic_playback
+RMDir /r $TEMP\temp_AudioWhisper_mic_playback
 
 ; Lastly refresh icons and env
 ;Call unRefresh

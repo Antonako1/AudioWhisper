@@ -2,7 +2,7 @@ using NAudio.Wave;
 using System;
 
 class Program {
-    public static string appdata_location = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Temp\\temp_hermes_mic_playback\\";
+    public static string appdata_location = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Temp\\temp_AudioWhisper_mic_playback\\";
     private static File_reader? json_file_reader = new();
     private JsonObject settings = json_file_reader?.data;
     static void Main(string[] args) {
@@ -119,8 +119,8 @@ class Program {
         }
     }
     private void Console_writing(string what){
-        Console.Clear();
-        Console.WriteLine("Currently in:");
+        Console.Clear(); 
+        Console.WriteLine("AudioWhisper | Currently in:");
         Console.WriteLine("Main | Main");
         switch(what){
             case "main":
