@@ -2,73 +2,97 @@ using NAudio.Wave;
 using System;
 
 class Program {
-    public static string appdata_location = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\temp_hermes_mic_playback\\";
+    public static string appdata_location = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Temp\\temp_hermes_mic_playback\\";
+    private static File_reader? json_file_reader = new();
+    private JsonObject settings = json_file_reader?.data;
     static void Main(string[] args) {
         // Create new folder
         System.IO.Directory.CreateDirectory(appdata_location);
-        emptyDir();
+        EmptyDir();
         Program audioplayer = new();
     }
 
-    static void emptyDir(){
+    static void EmptyDir(){
         // Empty on start
         System.IO.DirectoryInfo di = new(appdata_location);
         foreach (FileInfo file in di.EnumerateFiles()){
             file.Delete(); 
         }
     }
+    private static WaveInEvent? recorder;
+    private static BufferedWaveProvider? bufferedWaveProvider;
+    private static SavingWaveProvider? savingWaveProvider;
+    private static WaveOutEvent? player;
+    private static bool playing = false;
 
-    private static WaveInEvent recorder;
-    private static BufferedWaveProvider bufferedWaveProvider;
-    private static SavingWaveProvider savingWaveProvider;
-    private static WaveOutEvent player;
-
-    private static string help_message = "Press '1' to start, '2' to stop, '3' to exit.";
+    private static readonly string help_message = "Press '1' to start, '2' to stop, '3' to edit settings, '4' to exit.";
     public Program(){
-        Console.WriteLine(help_message);
+        playing = settings.On;
+        Console_writing("main");
+        // Automatic start
+        if(playing){
+            StopRecording();
+            EmptyDir();
+            StartRecording();
+        }
         while (true){
             var key = Console.ReadKey().Key;
             switch (key){
                 case ConsoleKey.D1:
+                    playing = true;
+                    StopRecording();
+                    EmptyDir();
                     StartRecording();
+                    Console_writing("main");
                     break;
                 case ConsoleKey.D2:
+                    playing = false;
                     StopRecording();
-                    emptyDir();
+                    EmptyDir();
+                    Console_writing("main");
                     break;
                 case ConsoleKey.D3:
+                    json_file_reader?.Cli();
+                    settings = json_file_reader?.data;
+                    Console_writing("main");
+                    if(playing){
+                        StopRecording();
+                        EmptyDir();
+                        StartRecording();
+                    }
+                    break;
+                case ConsoleKey.D4:
                     Environment.Exit(0);
-                    emptyDir();
                     break;
                 default:
-                    Console.WriteLine("Invalid input. " + help_message);
+                    Console_writing("error");
                     break;
             }
         }
     }
 
-    public static void StartRecording(){
+    public void StartRecording(){
         // set up the recorder
         recorder = new WaveInEvent(){
-            BufferMilliseconds = 50, // Adjust the buffer size as needed
-            NumberOfBuffers = 10, // Adjust the number of buffers as needed
+            BufferMilliseconds = settings.BufferMilliseconds,
+            NumberOfBuffers = settings.NumberOfBuffers,
         };
         recorder.DataAvailable += RecorderOnDataAvailable;
 
         // set up our signal chain
         bufferedWaveProvider = new BufferedWaveProvider(recorder.WaveFormat){
-            BufferLength = 8192, // Adjust the buffer size as needed
-            DiscardOnBufferOverflow = true,
+            BufferLength = settings.BufferLength,
+            DiscardOnBufferOverflow = settings.DiscardOnBufferOverflow,
         };
         savingWaveProvider = new SavingWaveProvider(bufferedWaveProvider, appdata_location + Guid.NewGuid() + ".wav");
 
         // set up playback
         player = new WaveOutEvent()
         {
-            DesiredLatency = 100, // Adjust the latency as needed
+            DesiredLatency = settings.DesiredLatency,
         };
         player.Init(savingWaveProvider);
-        player.Volume = 0.05F;
+        player.Volume = (float)settings.Volume / 100;
 
         // begin playback & record
         player.Play();
@@ -77,21 +101,37 @@ class Program {
 
     public static void StopRecording(){
         // stop recording
-        recorder.StopRecording();
+        recorder?.StopRecording();
 
         // stop playback
-        player.Stop();
+        player?.Stop();
 
-        // finalise the WAV file
-        savingWaveProvider.Dispose();
+        // finalise the .WAV file
+        savingWaveProvider?.Dispose();
     }
 
-    private static void RecorderOnDataAvailable(object sender, WaveInEventArgs waveInEventArgs){
-        bufferedWaveProvider.AddSamples(waveInEventArgs.Buffer, 0, waveInEventArgs.BytesRecorded);
-        if(recorder.GetPosition() / 8096 > 100){
+    private void RecorderOnDataAvailable(object sender, WaveInEventArgs waveInEventArgs){
+        bufferedWaveProvider?.AddSamples(waveInEventArgs.Buffer, 0, waveInEventArgs.BytesRecorded);
+        if(recorder?.GetPosition() / 8096 > settings.EmptyCacheSeconds){
             StopRecording();
-            emptyDir();
+            EmptyDir();
             StartRecording();
+        }
+    }
+    private void Console_writing(string what){
+        Console.Clear();
+        Console.WriteLine("Currently in:");
+        Console.WriteLine("Main | Main");
+        switch(what){
+            case "main":
+                // Console.WriteLine("Main | Main");
+                Console.WriteLine(help_message);
+                break;
+            case "error":
+                // Console.Clear();
+                // Console.WriteLine("Main | Main");
+                Console.WriteLine("Invalid input. " + help_message);
+                break;
         }
     }
 }

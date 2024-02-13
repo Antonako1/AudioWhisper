@@ -108,6 +108,12 @@ SectionGroup "!Main Program" RO
         SetOutPath "$TEMP\temp_hermes_mic_playback"
         File "Hermes.ico"
     SectionEnd
+    Section !save.json sec19_id
+        SectionInstType ${IT_FULL} ${IT_MIN} RO
+        SectionIn 1 ${sec1_id}
+        SetOutPath "$TEMP\temp_hermes_mic_playback"
+        File "save.json"
+    SectionEnd
 SectionGroupEnd
 
 
@@ -150,7 +156,7 @@ PageExEnd
 ; Set the default installation directory
 Function .onInit
     InitPluginsDir
-    StrCpy $INSTALL_DIR $PROGRAMFILES64\Hermes
+    StrCpy $INSTALL_DIR $APPDATA\Hermes
 FunctionEnd
 
 ############################## START ##############################
@@ -289,6 +295,9 @@ ${EndIf}
 ${If} ${SectionIsSelected} ${sec18_id}
     File "Hermes.ico"
 ${EndIf}
+${If} ${SectionIsSelected} ${sec19_id}
+    File "save.json"
+${EndIf}
 
 # Create shortcut on DESKTOP
 CreateShortcut "$DESKTOP\Hermes.lnk" "$INSTALL_DIR\Hermes.exe" "" "$INSTALL_DIR\Hermes.ico"
@@ -322,6 +331,7 @@ nsExec::ExecToLog 'Powershell.exe -ExecutionPolicy Bypass -File "$INSTDIR\Uninst
 ; Remove installed files during uninstallation
 
 Delete "$INSTDIR\Hermes.exe"
+Delete "$INSTDIR\save.json"
 Delete "$INSTDIR\Hermes.dll"
 Delete "$INSTDIR\Uninstall.exe"
 Delete "$INSTDIR\license.txt"
@@ -336,6 +346,7 @@ Delete "$INSTDIR\NAudio.Midi.dll"
 Delete "$INSTDIR\NAudio.Wasapi.dll"
 Delete "$INSTDIR\NAudio.WinMM.dll"
 Delete "$INSTDIR\Hermes.ico"
+Delete "$INSTDIR\save.json"
 Delete "$DESKTOP\Hermes.lnk"
 
 ; Remove the installation directory and TEMP directory if it still exists
