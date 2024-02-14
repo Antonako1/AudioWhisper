@@ -6,6 +6,7 @@
 # NSIS INSTALL FOLDER
 nsis/*
 !nsis/script.nsi
+!nsis/moveFile.nsh
 !nsis/Setup.ps1
 !nsis/Uninstall.ps1
 build/
