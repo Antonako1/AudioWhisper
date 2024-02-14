@@ -7,6 +7,12 @@ unicode True
 !define HWND_BROADCAST 0xFFFF
 !define WM_SETTINGCHANGE 0x001A
 
+!include 'FileFunc.nsh'
+!insertmacro Locate
+ 
+Var /GLOBAL switch_overwrite
+!include 'MoveFile.nsh'
+
 Outfile "AudioWhisper-Setup.exe"
 RequestExecutionLevel admin
 
@@ -133,6 +139,8 @@ Function .onVerifyInstDir
     Call CheckFolder
 FunctionEnd
 
+; is old_json existing
+Var /GLOBAL old_json
 
 ; Checks if the folder exists, if it exists and user wants to delete
 ; it and it's contents the script will continue
@@ -143,7 +151,20 @@ ${If}  ${FileExists} $INSTALL_DIR
     MessageBox MB_YESNO|MB_ICONQUESTION `"$INSTALL_DIR" already exists, delete its contents and continue installing?` IDYES agree
     Abort "Setup aborted by user."
 agree:
+    ${If} ${FileExists} $INSTALL_DIR\save.json
+        MessageBox MB_YESNO|MB_ICONQUESTION `Would you like to keep old copy of your settings?` IDYES renameJSON
+    renameJSON:
+        ; rename and move to safer place while the folder is deleting
+        StrCpy $old_json "true"
+        ; can't save on top
+        Delete "$INSTALL_DIR\old_save.json"
+        Rename $INSTALL_DIR\save.json $INSTALL_DIR\old_save.json
+        !insertmacro MoveFile "$INSTALL_DIR\old_save.json" "$TEMP\temp_AudioWhisper_mic_playback\old_save.json"
+    ${EndIf}
+
     DetailPrint 'Removing "$INSTALL_DIR" and its contents.'
+    ; doesn't delete automatically?
+    Delete "$INSTALL_DIR\old_save.json"
     RMDir /r $INSTALL_DIR
 ${EndIf}
 FunctionEnd
@@ -155,6 +176,7 @@ PageExEnd
 ############## INIT ######################
 ; Set the default installation directory
 Function .onInit
+    StrCpy $switch_overwrite 0
     InitPluginsDir
     StrCpy $INSTALL_DIR $APPDATA\AudioWhisper
 FunctionEnd
@@ -177,10 +199,8 @@ Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.dll"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.Midi.dll"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.Wasapi.dll"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.WinMM.dll"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\save.json"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\AudioWhisper.ico"
-
-; The folder will be deleted in the Uninstall section
-RMDir /r $TEMP\temp_AudioWhisper_mic_playback
 
 DetailPrint 'Files from "$TEMP\temp_AudioWhisper_mic_playback" deleted. beginning setup.' 
 
@@ -257,6 +277,12 @@ ${Else}
 ${EndIf}
 
 ########## MAIN PROGRAM ##########
+# Get old_save.json back
+; doesnät delet??=
+Delete "$INSTALL_DIR\old_save.json"
+${If} $old_json == "true"
+    !insertmacro MoveFile "$TEMP\temp_AudioWhisper_mic_playback\old_save.json" "$INSTALL_DIR\old_save.json"
+${EndIf}
 ${If} ${SectionIsSelected} ${sec1_id}
     File "AudioWhisper.exe"
 ${EndIf}
@@ -347,8 +373,8 @@ Delete "$INSTDIR\NAudio.Wasapi.dll"
 Delete "$INSTDIR\NAudio.WinMM.dll"
 Delete "$INSTDIR\AudioWhisper.ico"
 Delete "$INSTDIR\save.json"
+Delete "$INSTDIR\old_save.json"
 Delete "$DESKTOP\AudioWhisper.lnk"
-
 ; Remove the installation directory and TEMP directory if it still exists
 RMDir /r $INSTDIR
 RMDir /r $TEMP\temp_AudioWhisper_mic_playback
