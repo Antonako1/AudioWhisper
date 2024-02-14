@@ -1,4 +1,5 @@
 using NAudio.Wave;
+using NAudio.Dsp;
 using System;
 
 class Program {
@@ -24,6 +25,7 @@ class Program {
     private static SavingWaveProvider? savingWaveProvider;
     private static WaveOutEvent? player;
     private static bool playing = false;
+    private static SavingWaveProvider? filterSampleProvider;
 
     private static readonly string help_message = "Press '1' to start, '2' to stop, '3' to edit settings, '4' to exit.";
     public Program(){
@@ -79,18 +81,36 @@ class Program {
         };
         recorder.DataAvailable += RecorderOnDataAvailable;
 
+
         // set up our signal chain
         bufferedWaveProvider = new BufferedWaveProvider(recorder.WaveFormat){
             BufferLength = settings.BufferLength,
             DiscardOnBufferOverflow = settings.DiscardOnBufferOverflow,
         };
-        savingWaveProvider = new SavingWaveProvider(bufferedWaveProvider, appdata_location + Guid.NewGuid() + ".wav");
+
+        // apply filter(s)
+        if(settings.HighPassOn){
+            var highPassFilter = new HighPassFilter(bufferedWaveProvider.ToSampleProvider(), settings.HighPassFrequency, settings.HighPassQualityFactor);
+            savingWaveProvider = new SavingWaveProvider(highPassFilter.ToWaveProvider(), appdata_location + Guid.NewGuid() + ".wav");
+        }
+        else{
+        // if(settings.LowPassOn){
+            var lowPassFilter = new LowPassFilter(bufferedWaveProvider.ToSampleProvider(), settings.LowPassFrequency, settings.LowPassQualityFactor);
+            savingWaveProvider = new SavingWaveProvider(lowPassFilter.ToWaveProvider(), appdata_location + Guid.NewGuid() + ".wav");
+        }
+
+
+        // savingWaveProvider = new SavingWaveProvider(bufferedWaveProvider, appdata_location + Guid.NewGuid() + ".wav");
+
+
+
 
         // set up playback
         player = new WaveOutEvent()
         {
             DesiredLatency = settings.DesiredLatency,
         };
+
         player.Init(savingWaveProvider);
         player.Volume = (float)settings.Volume / 100;
 
@@ -112,13 +132,14 @@ class Program {
 
     private void RecorderOnDataAvailable(object sender, WaveInEventArgs waveInEventArgs){
         bufferedWaveProvider?.AddSamples(waveInEventArgs.Buffer, 0, waveInEventArgs.BytesRecorded);
+        // todo: seconds ->
         if(recorder?.GetPosition() / 8096 > settings.EmptyCacheSeconds){
             StopRecording();
             EmptyDir();
             StartRecording();
         }
     }
-    private void Console_writing(string what){
+    private static void Console_writing(string what){
         Console.Clear(); 
         Console.WriteLine("AudioWhisper | Currently in:");
         Console.WriteLine("Main | Main");
@@ -136,39 +157,3 @@ class Program {
     }
 }
 
-class SavingWaveProvider : IWaveProvider, IDisposable{
-    private readonly IWaveProvider sourceWaveProvider;
-    private readonly WaveFileWriter writer;
-    private bool isWriterDisposed;
-    public readonly string wavFilePath;
-
-    public SavingWaveProvider(IWaveProvider sourceWaveProvider, string _wavFilePath)
-    {
-        this.sourceWaveProvider = sourceWaveProvider;
-        wavFilePath = _wavFilePath;
-        writer = new WaveFileWriter(wavFilePath, sourceWaveProvider.WaveFormat);
-    }
-
-    public int Read(byte[] buffer, int offset, int count)
-    {
-        var read = sourceWaveProvider.Read(buffer, offset, count);
-        if (count > 0 && !isWriterDisposed)
-        {
-            writer.Write(buffer, offset, read);
-        }
-        if (count == 0)
-        {
-            Dispose(); // auto-dispose in case users forget
-        }
-        return read;
-    }
-
-    public WaveFormat WaveFormat { get { return sourceWaveProvider.WaveFormat; } }
-
-    public void Dispose(){
-        if (!isWriterDisposed){
-            isWriterDisposed = true;
-            writer.Dispose();
-        }
-    }
-}

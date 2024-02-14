@@ -21,5 +21,24 @@
     "DesiredLatencyHelpText": "Latency between audio capture and playback (default 100 (ms))",
 
     "EmptyCacheSeconds": 100,
-    "EmptyCacheSecondsHelpText": "How frequently is cache be emptied while program is running (default 100 (s))"
+    "EmptyCacheSecondsHelpText": "How frequently is cache be emptied while program is running (default 100 (s))",
+
+    "LowPassFrequency": 800,
+    "LowPassFrequencyHelpText": "(Low pass filter) Noices above this frequncy will be cut off (default 800(hz))",
+
+    "HighPassFrequency": 500,
+    "HighPassFrequencyHelpText": "(High-pass filter) Noices below this frequncy will be cut off (default 500(hz))",
+
+    "!NOTICE!": "Be aware that too high quality factor may cause damage for user's headphones or ears!",
+    "LowPassQualityFactor": 1,
+    "LowPassQualityFactorHelpText": "(Low pass filter) Width of transition between passband and stopband (default 1)",
+
+    "HighPassQualityFactor": 1,
+    "HighPassQualityFactorHelpText": "(High-pass filter) Width of transition between passband and stopband (default 1)",
+
+    "HighPassOn": true,
+    "HighPassOnHelpText": "Is high-pass filter activated? (default true)",
+
+    "LowPassOn": false,
+    "LowPassOnHelpText": "Is low-pass filter activated? (default false)"
 }

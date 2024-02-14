@@ -10,8 +10,8 @@ unicode True
 Outfile "AudioWhisper-Setup.exe"
 RequestExecutionLevel admin
 
-BrandingText /TRIMCENTER "AudioWhisper 1.0.0 Setup"
-Name "AudioWhisper 1.0.0 Setup"
+BrandingText /TRIMCENTER "AudioWhisper 1.0.1 Setup"
+Name "AudioWhisper 1.0.1 Setup"
 ManifestSupportedOS Win10
 DetailsButtonText "Show progress"
 

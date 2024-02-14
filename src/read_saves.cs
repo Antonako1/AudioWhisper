@@ -21,11 +21,13 @@ class File_reader{
         bool run_settings = true;
         Read_file(); 
         Console_writing("main");
+        Console_writing("main");
 
         while(run_settings){
             var key = Console.ReadKey().Key;
             switch (key){
                 case ConsoleKey.D1:
+                    Console_writing("editing");
                     Console_writing("editing");
                     while(true){
                         key = Console.ReadKey().Key;
@@ -52,11 +54,13 @@ class File_reader{
                     break;
                 case ConsoleKey.D2:
                     Console_writing("help");
+                    Console_writing("help");
                     break;
                 case ConsoleKey.D3:
                     run_settings = false;
                     break;
                 default:
+                    Console_writing("error");
                     Console_writing("error");
                     break;
             }
@@ -77,18 +81,220 @@ class File_reader{
     }
     private int Save_changes(int what, string? line){
         switch (what){
-            case 1: if(bool.TryParse(line, out bool parse1)){data.On = parse1;return 0;}else{Console.WriteLine($"Failed to parse '{line}' as bool. Given value may be incorrect."); return 1;}
-            case 2: if(int.TryParse(line, out int parse2)){ if(parse2 <= 100){data.Volume = parse2; return 0;}else{return 1;}}else{Console.WriteLine($"Failed to parse '{line}' as int. Given value may be incorrect."); return 1;}
-            case 3: if(int.TryParse(line, out int parse3)){data.BufferMilliseconds = parse3;return 0;}else{Console.WriteLine($"Failed to parse '{line}' as int. Given value may be incorrect."); return 1;}
-            case 4: if(int.TryParse(line, out int parse4)){data.NumberOfBuffers = parse4;return 0;}else{Console.WriteLine($"Failed to parse '{line}' as int. Given value may be incorrect."); return 1;}
-            case 5: if(int.TryParse(line, out int parse5)){data.BufferLength = parse5;return 0;}else{Console.WriteLine($"Failed to parse '{line}' as int. Given value may be incorrect."); return 1;}
-            case 6: if(bool.TryParse(line, out bool parse6)){data.DiscardOnBufferOverflow = parse6;return 0;}else{Console.WriteLine($"Failed to parse '{line}' as bool. Given value may be incorrect."); return 1;}
-            case 7: if(int.TryParse(line, out int parse7)){data.DesiredLatency = parse7;return 0;}else{Console.WriteLine($"Failed to parse '{line}' as int. Given value may be incorrect."); return 1;}
-            case 8: if(int.TryParse(line, out int parse8)){data.EmptyCacheSeconds = parse8;return 0;}else{Console.WriteLine($"Failed to parse '{line}' as int. Given value may be incorrect."); return 1;}
+            case 0: 
+                if(bool.TryParse(line, out bool parse0)){
+                    data.On = parse0; 
+                    return 0;
+                }
+                Console.WriteLine($"Given value '{line}' may be incorrect.");
+                return 1;
+            case 1: 
+                if(int.TryParse(line, out int parse1)){
+                    if(Errorchecks.Errorcheck_volume(parse1)){
+                        data.Volume = parse1; 
+                        return 0;
+                    }
+                }
+                Console.WriteLine($"Given value '{line}' may be incorrect.");
+                return 1;
+            case 2: 
+                if(int.TryParse(line, out int parse2)){
+                    if(Errorchecks.Errorcheck_over0(parse2)){
+                        data.BufferMilliseconds = parse2;
+                        return 0;
+                    }
+                }
+                Console.WriteLine($"Given value '{line}' may be incorrect.");
+                return 1;
+            case 3: 
+                if(int.TryParse(line, out int parse3)){
+                    if(Errorchecks.Errorcheck_over0(parse3)){
+                        data.NumberOfBuffers = parse3;
+                        return 0;
+                    }
+                }
+                Console.WriteLine($"Given value '{line}' may be incorrect.");
+                return 1;
+            case 4: 
+                if(int.TryParse(line, out int parse4)){
+                    if(Errorchecks.Errorcheck_over0(parse4)){
+                        data.BufferLength = parse4;
+                        return 0;
+                    }
+                }
+                Console.WriteLine($"Given value '{line}' may be incorrect.");
+                return 1;
+            case 5: 
+                if(bool.TryParse(line, out bool parse5)){
+                    data.DiscardOnBufferOverflow = parse5;
+                    return 0;
+                }
+                Console.WriteLine($"Given value '{line}' may be incorrect.");
+                return 1;
+            case 6: 
+                if(int.TryParse(line, out int parse6)){
+                    if(Errorchecks.Errorcheck_over0(parse6)){
+                        data.DesiredLatency = parse6;
+                        return 0;
+                    }
+                }
+                Console.WriteLine($"Given value '{line}' may be incorrect.");
+                return 1;
+            case 7: 
+                if(int.TryParse(line, out int parse7)){
+                    if(Errorchecks.Errorcheck_over0(parse7)){
+                        data.EmptyCacheSeconds = parse7;
+                        return 0;
+                    }
+                }
+                Console.WriteLine($"Given value '{line}' may be incorrect.");
+                return 1;
+            case 8: 
+                if(bool.TryParse(line, out bool parse8)){
+                    if(data.LowPassOn){
+                        Console.WriteLine("WARNING: Currently only one filter can be active. Would you like to turn off low-pass filter? (y/n)");
+                        while(true){
+                            var key = Console.ReadKey().Key;
+                            switch (key){
+                                case ConsoleKey.Y:
+                                    data.LowPassOn = false;
+                                    data.HighPassOn = parse8;
+                                    return 0;
+                                case ConsoleKey.N:
+                                    return 0;
+                                default:
+                                    Console_writing("editing");
+                                    Console_writing("editing");
+                                    Console.WriteLine("WARNING: Currently only one filter can be active. Would you like to turn off low-pass filter? (y/n)");
+                                    break;
+                            }
+                        }
+                    } else {
+                        data.HighPassOn = parse8;
+                        return 0;
+                    }
+                }
+                Console.WriteLine($"Given value '{line}' may be incorrect.");
+                return 1;
+            case 9:
+                if(int.TryParse(line, out int parse9)){
+                    if(Errorchecks.Errorcheck_over0(parse9)){
+                        data.HighPassFrequency = parse9;
+                        return 0;
+                    }
+                }
+                Console.WriteLine($"Given value '{line}' may be incorrect.");
+                return 1;               
+            case 10: 
+                if(int.TryParse(line, out int parse10)){
+                    if(Errorchecks.Errorcheck_over0(parse10)){
+
+                        // ! Give warning if too large
+                        if(parse10 > 10){
+                            Console.WriteLine("WARNING: Too high values may cause damage to headphones or ears, do you want to proceed? (y/n)");
+                            while(true){
+                                var key = Console.ReadKey().Key;
+                                switch (key){
+                                    case ConsoleKey.Y:
+                                        data.HighPassQualityFactor = parse10;
+                                        return 0;
+                                    case ConsoleKey.N:
+                                        return 0;
+                                    default:
+                                        Console_writing("editing");
+                                        Console_writing("editing");
+                                        Console.WriteLine("WARNING: Too high values may cause damage to headphones or ears, do you want to proceed? (y/n)");
+                                        break;
+
+                                }
+                            }
+                        } else {
+                            data.HighPassQualityFactor = parse10;
+                            return 0;
+                        }
+                    }
+                }
+                Console.WriteLine($"Given value '{line}' may be incorrect.");
+                return 1;
+            
+            case 11: 
+                if(bool.TryParse(line, out bool parse11)){
+                    if(data.HighPassOn){
+                        Console.WriteLine("WARNING: Currently only one filter can be active. Would you like to turn off high-pass filter? (y/n)");
+                        while(true){
+                            var key = Console.ReadKey().Key;
+                            switch (key){
+                                case ConsoleKey.Y:
+                                    data.HighPassOn = false;
+                                    data.LowPassOn = parse11;
+                                    return 0;
+                                case ConsoleKey.N:
+                                    return 0;
+                                default:
+                                    Console_writing("editing");
+                                    Console_writing("editing");
+                                    Console.WriteLine("WARNING: Currently only one filter can be active. Would you like to turn off high-pass filter? (y/n)");
+                                    break;
+                            }
+                        }
+                    } else {
+                        data.LowPassOn = parse11;
+                        return 0;
+                    }
+                }
+                Console.WriteLine($"Given value '{line}' may be incorrect.");
+                return 1;
+            case 12:
+                if(int.TryParse(line, out int parse12)){
+                    if(Errorchecks.Errorcheck_over0(parse12)){
+                        data.LowPassFrequency = parse12;
+                        return 0;
+                    }
+                }
+                Console.WriteLine($"Given value '{line}' may be incorrect.");
+                return 1;               
+            case 13: 
+                if(int.TryParse(line, out int parse13)){
+                    if(Errorchecks.Errorcheck_over0(parse13)){
+
+                        // ! Give warning if too large
+                        if(parse13 > 10){
+                            Console.WriteLine("WARNING: Too high values may cause damage to headphones or ears, do you want to proceed? (y/n)");
+                            while(true){
+                                var key = Console.ReadKey().Key;
+                                switch (key){
+                                    case ConsoleKey.Y:
+                                        data.LowPassQualityFactor = parse13;
+                                        return 0;
+                                    case ConsoleKey.N:
+                                        return 0;
+                                    default:
+                                        Console_writing("editing");
+                                        Console_writing("editing");
+                                        Console.WriteLine("WARNING: Too high values may cause damage to headphones or ears, do you want to proceed? (y/n)");
+                                        break;
+
+                                }
+                            }
+                        } else {
+                            data.LowPassQualityFactor = parse13;
+                            return 0;
+                        }
+                    }
+                }
+                Console.WriteLine($"Given value '{line}' may be incorrect.");
+                return 1;
             default: Console.WriteLine("Error parsing"); return 1;
         }
     }
 
+    /*
+    q = 10
+    w = 11
+    e = 12
+    r = 13
+    jne.
+    */
     private Tuple<int, ReturnObject> Handle_setting(System.ConsoleKey setting_number){
         ReturnObject return_object = new()
         {
@@ -96,46 +302,81 @@ class File_reader{
             Name = "nothing"
         };
         switch (setting_number){
-            case ConsoleKey.D1:
+            case ConsoleKey.D0:
                 // On off
                 return_object.Values = "true | false";
                 return_object.Name = "On/Off";
-                return Tuple.Create(1, return_object);
-            case ConsoleKey.D2:
+                return Tuple.Create(0, return_object);
+            case ConsoleKey.D1:
                 // Playback volume
                 return_object.Values = "Integer 0-100";
                 return_object.Name = "Volume";
+                return Tuple.Create(1, return_object);
+            case ConsoleKey.D2:
+                // Chunk length
+                return_object.Values = "Integer 0<=";
+                return_object.Name = "Chunk length";
                 return Tuple.Create(2, return_object);
             case ConsoleKey.D3:
-                // Chunk length
-                return_object.Values = "Integer 0<";
-                return_object.Name = "Chunk length";
+                // Chunk overlap
+                return_object.Values = "Integer 0<=";
+                return_object.Name = "Chunk overlap";
                 return Tuple.Create(3, return_object);
             case ConsoleKey.D4:
                 // Chunk overlap
-                return_object.Values = "Integer 0<";
-                return_object.Name = "Chunk overlap";
+                return_object.Values = "Integer 0<=";
+                return_object.Name = "Buffer size";
                 return Tuple.Create(4, return_object);
             case ConsoleKey.D5:
-                // Chunk overlap
-                return_object.Values = "Integer 0<";
-                return_object.Name = "Buffer size";
-                return Tuple.Create(5, return_object);
-            case ConsoleKey.D6:
                 // Buffer overflow
                 return_object.Values = "true | false";
                 return_object.Name = "Buffer overflow";
+                return Tuple.Create(5, return_object);
+            case ConsoleKey.D6:
+                // Latency
+                return_object.Values = "Integer 0<=";
+                return_object.Name = "Latency";
                 return Tuple.Create(6, return_object);
             case ConsoleKey.D7:
-                // Latency
-                return_object.Values = "Integer 0<";
-                return_object.Name = "Latency";
-                return Tuple.Create(7, return_object);
-            case ConsoleKey.D8:
                 // Cache emptyrate
-                return_object.Values = "Integer 0<";
+                return_object.Values = "Integer 0<=";
                 return_object.Name = "Cache emptier";
+                return Tuple.Create(7, return_object);
+
+
+            case ConsoleKey.D8:
+                // High-pass filter
+                return_object.Values = "true | false";
+                return_object.Name = "High-pass filter";
                 return Tuple.Create(8, return_object);
+            case ConsoleKey.D9:
+                // High-pass filter frequency
+                return_object.Values = "Integer 0<=";
+                return_object.Name = "High-pass filter frequency";
+                return Tuple.Create(9, return_object);
+            case ConsoleKey.Q:
+                // Wualti factor
+                return_object.Values = "Integer 0<=";
+                return_object.Name = "High-pass quality factor";
+                return Tuple.Create(10, return_object);
+
+            case ConsoleKey.W:
+                // Low-pass filter
+                return_object.Values = "true | false";
+                return_object.Name = "Low-pass filter";
+                return Tuple.Create(11, return_object);
+            case ConsoleKey.E:
+                // Low-pass filter frequency
+                return_object.Values = "Integer 0<=";
+                return_object.Name = "Low-pass filter frequency";
+                return Tuple.Create(12, return_object);
+            case ConsoleKey.R:
+                // Wualti factor
+                return_object.Values = "Integer 0<=";
+                return_object.Name = "Low-pass quality factor";
+                return Tuple.Create(13, return_object);
+
+
             case ConsoleKey.Escape:
                 return Tuple.Create(0, return_object);
             default:
@@ -150,16 +391,7 @@ class File_reader{
         switch(what){
             case "editing":
                 Console.WriteLine("Settings | Editing");
-                Console.WriteLine(info_message);
-                Console.WriteLine(help_message_edit);
-                Console.WriteLine("|1| " + data?.OnHelpText + ". Current: " + data?.On);
-                Console.WriteLine("|2| " + data?.VolumeHelpText + ". Current: " + data?.Volume);
-                Console.WriteLine("|3| " + data?.BufferMillisecondsHelpText + ". Current: " + data?.BufferMilliseconds);
-                Console.WriteLine("|4| " + data?.NumberOfBuffersHelpText + ". Current: " + data?.NumberOfBuffers);
-                Console.WriteLine("|5| " + data?.BufferLengthHelpText + ". Current: " + data?.BufferLength);
-                Console.WriteLine("|6| " + data?.DiscardOnBufferOverflowHelpText + ". Current: " + data?.DiscardOnBufferOverflow);
-                Console.WriteLine("|7| " + data?.DesiredLatencyHelpText + ". Current: " + data?.DesiredLatency);
-                Console.WriteLine("|8| " + data?.EmptyCacheSecondsHelpText + ". Current: " + data?.EmptyCacheSeconds);
+                HelpTextInfo();
                 break;
             case "main":
                 Console.WriteLine("Settings | Main");
@@ -173,18 +405,29 @@ class File_reader{
                 break;
             case "help":
                 Console.WriteLine("Settings | Main");
-                Console.WriteLine(info_message);
-                Console.WriteLine(help_message);
-                Console.WriteLine("|1| " + data.OnHelpText + ". Current: " + data.On);
-                Console.WriteLine("|2| " + data.VolumeHelpText + ". Current: " + data.Volume);
-                Console.WriteLine("|3| " + data.BufferMillisecondsHelpText + ". Current: " + data.BufferMilliseconds);
-                Console.WriteLine("|4| " + data.NumberOfBuffersHelpText + ". Current: " + data.NumberOfBuffers);
-                Console.WriteLine("|5| " + data.BufferLengthHelpText + ". Current: " + data.BufferLength);
-                Console.WriteLine("|6| " + data.DiscardOnBufferOverflowHelpText + ". Current: " + data.DiscardOnBufferOverflow);
-                Console.WriteLine("|7| " + data.DesiredLatencyHelpText + ". Current: " + data.DesiredLatency);
-                Console.WriteLine("|8| " + data.EmptyCacheSecondsHelpText + ". Current: " + data.EmptyCacheSeconds);
+                HelpTextInfo();
                 break;
         }
+    }
+    private void HelpTextInfo(){
+        Console.WriteLine(info_message);
+        Console.WriteLine(help_message);
+        Console.WriteLine("|0| " + data.OnHelpText + ". Current: " + data.On);
+        Console.WriteLine("|1| " + data.VolumeHelpText + ". Current: " + data.Volume);
+        Console.WriteLine("|2| " + data.BufferMillisecondsHelpText + ". Current: " + data.BufferMilliseconds);
+        Console.WriteLine("|3| " + data.NumberOfBuffersHelpText + ". Current: " + data.NumberOfBuffers);
+        Console.WriteLine("|4| " + data.BufferLengthHelpText + ". Current: " + data.BufferLength);
+        Console.WriteLine("|5| " + data.DiscardOnBufferOverflowHelpText + ". Current: " + data.DiscardOnBufferOverflow);
+        Console.WriteLine("|6| " + data.DesiredLatencyHelpText + ". Current: " + data.DesiredLatency);
+        Console.WriteLine("|7| " + data.EmptyCacheSecondsHelpText + ". Current: " + data.EmptyCacheSeconds);
+
+        Console.WriteLine("|8| " + data.HighPassOnHelpText + ". Current: " + data.HighPassOn);
+        Console.WriteLine("|9| " + data.HighPassFrequencyHelpText + ". Current: " + data.HighPassFrequency);
+        Console.WriteLine("|q| " + data.HighPassQualityFactorHelpText + ". Current: " + data.HighPassQualityFactor);
+
+        Console.WriteLine("|w| " + data.LowPassOnHelpText + ". Current: " + data.LowPassOn);
+        Console.WriteLine("|e| " + data.LowPassFrequencyHelpText + ". Current: " + data.LowPassFrequency);
+        Console.WriteLine("|r| " + data.LowPassQualityFactorHelpText + ". Current: " + data.LowPassQualityFactor);
     }
 
     public static bool CancelableReadLine(out string value){
@@ -268,4 +511,22 @@ public class JsonObject{
 
     public int EmptyCacheSeconds { get; set; }
     public string? EmptyCacheSecondsHelpText { get; set; }
+
+    public int HighPassFrequency { get; set; }
+    public string? HighPassFrequencyHelpText { get; set; }
+
+    public int HighPassQualityFactor { get; set; }
+    public string? HighPassQualityFactorHelpText { get; set; }
+
+    public bool HighPassOn {get;set;}
+    public string? HighPassOnHelpText {get;set;}
+
+    public int LowPassFrequency { get; set; }
+    public string? LowPassFrequencyHelpText { get; set; }
+
+    public int LowPassQualityFactor { get; set; }
+    public string? LowPassQualityFactorHelpText { get; set; }
+
+    public bool LowPassOn {get;set;}
+    public string? LowPassOnHelpText {get;set;}
 }
