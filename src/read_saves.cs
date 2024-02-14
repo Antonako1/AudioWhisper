@@ -387,7 +387,8 @@ class File_reader{
 
     private void Console_writing(string what){
         Console.Clear();
-        Console.WriteLine("Hermes | Currently in:");
+        Console.WriteLine("AudioWhisper 1.0.1");
+        Console.WriteLine("Currently in:");
         switch(what){
             case "editing":
                 Console.WriteLine("Settings | Editing");

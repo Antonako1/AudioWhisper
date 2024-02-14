@@ -64,6 +64,8 @@ class Program {
                     }
                     break;
                 case ConsoleKey.D4:
+                    StopRecording();
+                    EmptyDir();
                     Environment.Exit(0);
                     break;
                 default:
@@ -141,7 +143,8 @@ class Program {
     }
     private static void Console_writing(string what){
         Console.Clear(); 
-        Console.WriteLine("AudioWhisper | Currently in:");
+        Console.WriteLine("AudioWhisper 1.0.1");
+        Console.WriteLine("Currently in:");
         Console.WriteLine("Main | Main");
         switch(what){
             case "main":
