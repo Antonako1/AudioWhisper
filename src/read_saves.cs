@@ -4,13 +4,23 @@ using System.IO;
 using System.Text;
 using NAudio.Wave.SampleProviders;
 
+
+
 class File_reader{
-    private readonly string source_path = "save.json";
+    private string dir_path = "";
+    private string source_path = "\\save.json";
     private readonly string help_message = "Press '1' to edit values, '2' for help, '3' to return";
     private readonly string help_message_edit = "Enter setting number and give value. press 'enter' to save, 'esc' to return";
     private readonly string info_message = "Changes are saved automatically. They will be applied once you return to 'Main | Main'";
     public JsonObject? data;
     public File_reader(){
+        string exePath = Environment.ProcessPath;
+
+        string exeDirectory = Path.GetDirectoryName(exePath);
+        this.dir_path = exeDirectory;
+        Global.dir_path = this.dir_path;
+        this.source_path = exeDirectory + source_path;
+
         Read_file();
     }
     /*
@@ -32,7 +42,7 @@ class File_reader{
                     while(true){
                         key = Console.ReadKey().Key;
                         (int result, ReturnObject placehold) = Handle_setting(key);
-                        if(result == 0){
+                        if(result == 777){
                             break;
                         }
                         Console.WriteLine($"\nEditing '{placehold.Name}'. Possible values: '{placehold.Values}'");
@@ -54,7 +64,6 @@ class File_reader{
                     break;
                 case ConsoleKey.D2:
                     Console_writing("help");
-                    Console_writing("help");
                     break;
                 case ConsoleKey.D3:
                     run_settings = false;
@@ -71,7 +80,7 @@ class File_reader{
         string json_data_as_string = File.ReadAllText(source_path);
         this.data = JsonSerializer.Deserialize<JsonObject>(json_data_as_string);
     }
-    private void Write_file(){
+    public void Write_file(){
         JsonSerializerOptions options = new()
         {
             WriteIndented = true
@@ -215,8 +224,7 @@ class File_reader{
                     }
                 }
                 Console.WriteLine($"Given value '{line}' may be incorrect.");
-                return 1;
-            
+                return 1;          
             case 11: 
                 if(bool.TryParse(line, out bool parse11)){
                     if(data.HighPassOn){
@@ -284,6 +292,23 @@ class File_reader{
                 }
                 Console.WriteLine($"Given value '{line}' may be incorrect.");
                 return 1;
+            case 14:
+                if(bool.TryParse(line, out bool parse14)){
+                    data.RevertChanges = parse14; 
+                    // new save.json file from backup.json
+                    Reset_Save resetSaveInstance = new("backup");
+                    Console.WriteLine("Settings have been reverted");
+                    return 1;
+                }
+                Console.WriteLine($"Given value '{line}' may be incorrect.");
+                return 1;
+            case 15:
+                if(bool.TryParse(line, out bool parse15)){
+                    data.QuietStartMessage = parse15; 
+                    return 0;
+                }
+                Console.WriteLine($"Given value '{line}' may be incorrect.");
+                return 1;
             default: Console.WriteLine("Error parsing"); return 1;
         }
     }
@@ -293,9 +318,11 @@ class File_reader{
     w = 11
     e = 12
     r = 13
+    t = 14
+    y = 15
     jne.
     */
-    private Tuple<int, ReturnObject> Handle_setting(System.ConsoleKey setting_number){
+    private Tuple<int, ReturnObject> Handle_setting(ConsoleKey setting_number){
         ReturnObject return_object = new()
         {
             Values = "none",
@@ -342,8 +369,6 @@ class File_reader{
                 return_object.Values = "Integer 0<=";
                 return_object.Name = "Cache emptier";
                 return Tuple.Create(7, return_object);
-
-
             case ConsoleKey.D8:
                 // High-pass filter
                 return_object.Values = "true | false";
@@ -359,7 +384,6 @@ class File_reader{
                 return_object.Values = "Integer 0<=";
                 return_object.Name = "High-pass quality factor";
                 return Tuple.Create(10, return_object);
-
             case ConsoleKey.W:
                 // Low-pass filter
                 return_object.Values = "true | false";
@@ -375,44 +399,72 @@ class File_reader{
                 return_object.Values = "Integer 0<=";
                 return_object.Name = "Low-pass quality factor";
                 return Tuple.Create(13, return_object);
-
-
+            case ConsoleKey.T:
+                // Revert setting changes
+                return_object.Values = "true | false";
+                return_object.Name = "Revert settings";
+                return Tuple.Create(14, return_object);
+                break;
+            case ConsoleKey.Y:
+                // Revert setting changes
+                return_object.Values = "true | false";
+                return_object.Name = "Quiet startup";
+                return Tuple.Create(15, return_object);
+    
             case ConsoleKey.Escape:
-                return Tuple.Create(0, return_object);
+                return Tuple.Create(777, return_object);
             default:
                 Console_writing("editing");
-                return Tuple.Create(0, return_object);
+                return Tuple.Create(777, return_object);
         }
     }
 
     private void Console_writing(string what){
+        Console.ResetColor();
         Console.Clear();
-        Console.WriteLine("AudioWhisper 1.0.1");
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"AudioWhisper 1.0.2. Active: {Global.playing}");
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine("Currently in:");
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.ForegroundColor = ConsoleColor.Red;
         switch(what){
             case "editing":
                 Console.WriteLine("Settings | Editing");
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Green;
                 HelpTextInfo();
                 break;
             case "main":
                 Console.WriteLine("Settings | Main");
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(info_message);
                 Console.WriteLine(help_message);
                 break;
             case "error":
                 Console.WriteLine("Settings | Main");
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(info_message);
                 Console.WriteLine("Invalid input. " + help_message);
                 break;
             case "help":
                 Console.WriteLine("Settings | Main");
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.Green;
                 HelpTextInfo();
                 break;
         }
+        Console.ResetColor();
     }
     private void HelpTextInfo(){
         Console.WriteLine(info_message);
         Console.WriteLine(help_message);
+        Console.WriteLine("When editing values, enter setting number/letter and enter value.");
+        Console.WriteLine("===========================================================================================================");
         Console.WriteLine("|0| " + data.OnHelpText + ". Current: " + data.On);
         Console.WriteLine("|1| " + data.VolumeHelpText + ". Current: " + data.Volume);
         Console.WriteLine("|2| " + data.BufferMillisecondsHelpText + ". Current: " + data.BufferMilliseconds);
@@ -421,14 +473,15 @@ class File_reader{
         Console.WriteLine("|5| " + data.DiscardOnBufferOverflowHelpText + ". Current: " + data.DiscardOnBufferOverflow);
         Console.WriteLine("|6| " + data.DesiredLatencyHelpText + ". Current: " + data.DesiredLatency);
         Console.WriteLine("|7| " + data.EmptyCacheSecondsHelpText + ". Current: " + data.EmptyCacheSeconds);
-
         Console.WriteLine("|8| " + data.HighPassOnHelpText + ". Current: " + data.HighPassOn);
         Console.WriteLine("|9| " + data.HighPassFrequencyHelpText + ". Current: " + data.HighPassFrequency);
         Console.WriteLine("|q| " + data.HighPassQualityFactorHelpText + ". Current: " + data.HighPassQualityFactor);
-
         Console.WriteLine("|w| " + data.LowPassOnHelpText + ". Current: " + data.LowPassOn);
         Console.WriteLine("|e| " + data.LowPassFrequencyHelpText + ". Current: " + data.LowPassFrequency);
         Console.WriteLine("|r| " + data.LowPassQualityFactorHelpText + ". Current: " + data.LowPassQualityFactor);
+        Console.WriteLine("|t| " + data.RevertChangesHelpText + ". Current: " + data.RevertChanges);
+        Console.WriteLine("|y| " + data.QuietStartMessageHelpText + ". Current: " + data.QuietStartMessage);
+        Console.WriteLine("===========================================================================================================");
     }
 
     public static bool CancelableReadLine(out string value){
@@ -488,46 +541,3 @@ public class ReturnObject{
     public string? Name { get; set; }
 }
 
-public class JsonObject{
-    public bool On { get; set; }
-    public string? OnHelpText { get; set; }
-
-    public int Volume { get; set; }
-    public string? VolumeHelpText { get; set; }
-
-    public int BufferMilliseconds { get; set; }
-    public string? BufferMillisecondsHelpText { get; set; }
-
-    public int NumberOfBuffers { get; set; }
-    public string? NumberOfBuffersHelpText { get; set; }
-
-    public int BufferLength { get; set; }
-    public string? BufferLengthHelpText { get; set; }
-
-    public bool DiscardOnBufferOverflow { get; set; }
-    public string? DiscardOnBufferOverflowHelpText { get; set; }
-
-    public int DesiredLatency { get; set; }
-    public string? DesiredLatencyHelpText { get; set; }
-
-    public int EmptyCacheSeconds { get; set; }
-    public string? EmptyCacheSecondsHelpText { get; set; }
-
-    public int HighPassFrequency { get; set; }
-    public string? HighPassFrequencyHelpText { get; set; }
-
-    public int HighPassQualityFactor { get; set; }
-    public string? HighPassQualityFactorHelpText { get; set; }
-
-    public bool HighPassOn {get;set;}
-    public string? HighPassOnHelpText {get;set;}
-
-    public int LowPassFrequency { get; set; }
-    public string? LowPassFrequencyHelpText { get; set; }
-
-    public int LowPassQualityFactor { get; set; }
-    public string? LowPassQualityFactorHelpText { get; set; }
-
-    public bool LowPassOn {get;set;}
-    public string? LowPassOnHelpText {get;set;}
-}

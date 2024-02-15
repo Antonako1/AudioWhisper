@@ -16,8 +16,8 @@ Var /GLOBAL switch_overwrite
 Outfile "AudioWhisper-Setup.exe"
 RequestExecutionLevel admin
 
-BrandingText /TRIMCENTER "AudioWhisper 1.0.1 Setup"
-Name "AudioWhisper 1.0.1 Setup"
+BrandingText /TRIMCENTER "AudioWhisper 1.0.2 Setup"
+Name "AudioWhisper 1.0.2 Setup"
 ManifestSupportedOS Win10
 DetailsButtonText "Show progress"
 
@@ -120,6 +120,12 @@ SectionGroup "!Main Program" RO
         SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
         File "save.json"
     SectionEnd
+    Section !backup_save.json sec20_id
+        SectionInstType ${IT_FULL} ${IT_MIN} RO
+        SectionIn 1 ${sec1_id}
+        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
+        File "backup_save.json"
+    SectionEnd
 SectionGroupEnd
 
 
@@ -200,6 +206,7 @@ Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.Midi.dll"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.Wasapi.dll"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.WinMM.dll"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\save.json"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\backup_save.json"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\AudioWhisper.ico"
 
 DetailPrint 'Files from "$TEMP\temp_AudioWhisper_mic_playback" deleted. beginning setup.' 
@@ -324,6 +331,9 @@ ${EndIf}
 ${If} ${SectionIsSelected} ${sec19_id}
     File "save.json"
 ${EndIf}
+${If} ${SectionIsSelected} ${sec19_id}
+    File "backup_save.json"
+${EndIf}
 
 # Create shortcut on DESKTOP
 CreateShortcut "$DESKTOP\AudioWhisper.lnk" "$INSTALL_DIR\AudioWhisper.exe" "" "$INSTALL_DIR\AudioWhisper.ico"
@@ -374,6 +384,7 @@ Delete "$INSTDIR\NAudio.WinMM.dll"
 Delete "$INSTDIR\AudioWhisper.ico"
 Delete "$INSTDIR\save.json"
 Delete "$INSTDIR\old_save.json"
+Delete "$INSTDIR\backup_save.json"
 Delete "$DESKTOP\AudioWhisper.lnk"
 ; Remove the installation directory and TEMP directory if it still exists
 RMDir /r $INSTDIR

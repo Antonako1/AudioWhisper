@@ -11,21 +11,21 @@
    - 1 = Edit values
    - 2 = Help message
    - 3 = Return
- - 4 = Exit program
+ - Q = Exit program
 
  --- 
  
-### Builds:
+### Building:
 
-**save.json from src\json\ is required**
-
+**Executable's directory must have save.json and backup_save.json to work**
  - Standalone executable: 
    - ``` dotnet build ```
    - ``` dotnet publish ```
    - ``` run.bat ```
 
+**Running either script will move all necessary files to \nsis**
  - Installer (requires [nsis](https://nsis.sourceforge.io/Download)): 
    - ``` zero_build.bat ```
-   - ``` build_setup_executable.bat (use dotnet publish)  ```
+   - ``` build_setup_executable.bat (run "dotnet publish" before running)  ```
   
  ---

@@ -3,6 +3,8 @@ SET "op=.\nsis"
 SET "outputPath=.\bin\Debug\net7.0\publish"
 ECHO %outputPath%\AudioWhisper.exe %op%
 COPY /Y .\src\json\save.json %op%
+RENAME %op%\save.json backup_save.json
+COPY /Y .\src\json\save.json %op%
 COPY /Y license.txt %op%
 COPY /B /Y AudioWhisper.ico %op%
 COPY /B /Y %outputPath%\AudioWhisper.exe %op%

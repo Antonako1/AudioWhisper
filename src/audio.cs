@@ -10,6 +10,7 @@ class Program {
         // Create new folder
         System.IO.Directory.CreateDirectory(appdata_location);
         EmptyDir();
+        Console.Clear();
         Program audioplayer = new();
     }
 
@@ -27,9 +28,40 @@ class Program {
     private static bool playing = false;
     private static SavingWaveProvider? filterSampleProvider;
 
-    private static readonly string help_message = "Press '1' to start, '2' to stop, '3' to edit settings, '4' to exit.";
+    private static readonly string help_message = "Press '1' to start, '2' to stop, '3' to edit settings, 'Q' to exit.";
     public Program(){
+        // CHECK IF old_save.json EXISTS
+        if(settings.QuietStartMessage == false){
+            if(File.Exists(Global.dir_path + "\\old_save.json")){
+                // if agree
+                string _temp_quick_message = "'old_save.json' file found in base directory. Change current settings to old ones? (y/n) \nThis message can be disabled in the settings"; 
+                bool running = true;
+                Console.WriteLine(_temp_quick_message);
+                while (running){
+                    var key = Console.ReadKey().Key;
+                    switch (key){
+                        case ConsoleKey.Y:
+                            Reset_Save resetSaveInstance = new("old");
+                            json_file_reader.Read_file();
+                            json_file_reader.data.QuietStartMessage = true;
+                            json_file_reader.Write_file();
+                            this.settings = json_file_reader?.data;
+                            running = false;
+                            break;
+                        case ConsoleKey.N:
+                            running = false;
+                            break;
+                        default:
+                            Console.Clear();
+                            Console.WriteLine(_temp_quick_message);
+                            break;
+                    }
+                }
+            }
+        }
         playing = settings.On;
+        Global.playing = playing;
+        Console_writing("main");
         Console_writing("main");
         // Automatic start
         if(playing){
@@ -42,6 +74,7 @@ class Program {
             switch (key){
                 case ConsoleKey.D1:
                     playing = true;
+                    Global.playing = playing;
                     StopRecording();
                     EmptyDir();
                     StartRecording();
@@ -49,6 +82,7 @@ class Program {
                     break;
                 case ConsoleKey.D2:
                     playing = false;
+                    Global.playing = playing;
                     StopRecording();
                     EmptyDir();
                     Console_writing("main");
@@ -63,7 +97,7 @@ class Program {
                         StartRecording();
                     }
                     break;
-                case ConsoleKey.D4:
+                case ConsoleKey.Q:
                     StopRecording();
                     EmptyDir();
                     Environment.Exit(0);
@@ -142,10 +176,19 @@ class Program {
         }
     }
     private static void Console_writing(string what){
+        Console.ResetColor(); 
         Console.Clear(); 
-        Console.WriteLine("AudioWhisper 1.0.1");
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"AudioWhisper 1.0.2. Active: {Global.playing}");
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine("Currently in:");
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.ForegroundColor = ConsoleColor.Red;
         Console.WriteLine("Main | Main");
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.ForegroundColor = ConsoleColor.Green;
         switch(what){
             case "main":
                 // Console.WriteLine("Main | Main");
@@ -157,6 +200,7 @@ class Program {
                 Console.WriteLine("Invalid input. " + help_message);
                 break;
         }
+        Console.ResetColor();
     }
 }
 

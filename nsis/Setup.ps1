@@ -9,7 +9,6 @@ if (-not $isAdmin) {
 # Argument got from .bat
 # Contains the directory it was called from
 $callDir = $args[0]
-$mode = $args[1]
 
 
 

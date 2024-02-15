@@ -31,14 +31,20 @@
 
     "!NOTICE!": "Be aware that too high quality factor may cause damage for user's headphones or ears!",
     "LowPassQualityFactor": 1,
-    "LowPassQualityFactorHelpText": "(Low pass filter) Width of transition between passband and stopband (default 1)",
+    "LowPassQualityFactorHelpText": "(Low pass filter) Quality factor. Width of transition between passband and stopband (default 1)",
 
     "HighPassQualityFactor": 1,
-    "HighPassQualityFactorHelpText": "(High-pass filter) Width of transition between passband and stopband (default 1)",
+    "HighPassQualityFactorHelpText": "(High-pass filter) Quality factor. Width of transition between passband and stopband (default 1)",
 
     "HighPassOn": true,
     "HighPassOnHelpText": "Is high-pass filter activated? (default true)",
 
     "LowPassOn": false,
-    "LowPassOnHelpText": "Is low-pass filter activated? (default false)"
+    "LowPassOnHelpText": "Is low-pass filter activated? (default false)",
+
+    "RevertChanges": false,
+    "RevertChangesHelpText": "Revert settings back to normal? (default false)",
+
+    "QuietStartMessage": false,
+    "QuietStartMessageHelpText": "Turn off start message (default false)"
 }
