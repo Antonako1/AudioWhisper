@@ -23,10 +23,7 @@ class File_reader{
 
         Read_file();
     }
-    /*
-    Show mute on/off @ Main | Main
-    On background play (oikee alakulma)
-    */
+
     public void Cli(){     
         bool run_settings = true;
         Read_file(); 
@@ -161,7 +158,10 @@ class File_reader{
             case 8: 
                 if(bool.TryParse(line, out bool parse8)){
                     if(data.LowPassOn){
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.WriteLine("WARNING: Currently only one filter can be active. Would you like to turn off low-pass filter? (y/n)");
+                        Console.ResetColor();
                         while(true){
                             var key = Console.ReadKey().Key;
                             switch (key){
@@ -174,7 +174,10 @@ class File_reader{
                                 default:
                                     Console_writing("editing");
                                     Console_writing("editing");
+                                    Console.BackgroundColor = ConsoleColor.Red;
+                                    Console.ForegroundColor = ConsoleColor.White;
                                     Console.WriteLine("WARNING: Currently only one filter can be active. Would you like to turn off low-pass filter? (y/n)");
+                                    Console.ResetColor();
                                     break;
                             }
                         }
@@ -200,7 +203,10 @@ class File_reader{
 
                         // ! Give warning if too large
                         if(parse10 > 10){
+                            Console.BackgroundColor = ConsoleColor.Red;
+                            Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("WARNING: Too high values may cause damage to headphones or ears, do you want to proceed? (y/n)");
+                            Console.ResetColor();
                             while(true){
                                 var key = Console.ReadKey().Key;
                                 switch (key){
@@ -212,7 +218,10 @@ class File_reader{
                                     default:
                                         Console_writing("editing");
                                         Console_writing("editing");
+                                        Console.BackgroundColor = ConsoleColor.Red;
+                                        Console.ForegroundColor = ConsoleColor.White;
                                         Console.WriteLine("WARNING: Too high values may cause damage to headphones or ears, do you want to proceed? (y/n)");
+                                        Console.ResetColor();
                                         break;
 
                                 }
@@ -228,7 +237,10 @@ class File_reader{
             case 11: 
                 if(bool.TryParse(line, out bool parse11)){
                     if(data.HighPassOn){
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.WriteLine("WARNING: Currently only one filter can be active. Would you like to turn off high-pass filter? (y/n)");
+                        Console.ResetColor();
                         while(true){
                             var key = Console.ReadKey().Key;
                             switch (key){
@@ -241,7 +253,10 @@ class File_reader{
                                 default:
                                     Console_writing("editing");
                                     Console_writing("editing");
+                                    Console.BackgroundColor = ConsoleColor.Red;
+                                    Console.ForegroundColor = ConsoleColor.White;
                                     Console.WriteLine("WARNING: Currently only one filter can be active. Would you like to turn off high-pass filter? (y/n)");
+                                    Console.ResetColor();
                                     break;
                             }
                         }
@@ -267,7 +282,10 @@ class File_reader{
 
                         // ! Give warning if too large
                         if(parse13 > 10){
+                            Console.BackgroundColor = ConsoleColor.Red;
+                            Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine("WARNING: Too high values may cause damage to headphones or ears, do you want to proceed? (y/n)");
+                            Console.ResetColor();
                             while(true){
                                 var key = Console.ReadKey().Key;
                                 switch (key){
@@ -279,7 +297,10 @@ class File_reader{
                                     default:
                                         Console_writing("editing");
                                         Console_writing("editing");
+                                        Console.BackgroundColor = ConsoleColor.Red;
+                                        Console.ForegroundColor = ConsoleColor.White;
                                         Console.WriteLine("WARNING: Too high values may cause damage to headphones or ears, do you want to proceed? (y/n)");
+                                        Console.ResetColor();
                                         break;
 
                                 }

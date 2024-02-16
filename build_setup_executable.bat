@@ -1,26 +1,30 @@
 @ECHO OFF
-SET "op=.\nsis"
-SET "outputPath=.\bin\Debug\net7.0\publish"
-ECHO %outputPath%\AudioWhisper.exe %op%
-COPY /Y .\src\json\save.json %op%
-RENAME %op%\save.json backup_save.json
-COPY /Y .\src\json\save.json %op%
-COPY /Y license.txt %op%
-COPY /B /Y AudioWhisper.ico %op%
-COPY /B /Y %outputPath%\AudioWhisper.exe %op%
-COPY /B /Y %outputPath%\AudioWhisper.dll %op%
-COPY /Y %outputPath%\AudioWhisper.deps.json %op%
-COPY /B /Y %outputPath%\AudioWhisper.dll %op%
-COPY /B /Y %outputPath%\AudioWhisper.exe %op%
-COPY /B /Y %outputPath%\AudioWhisper.pdb %op%
-COPY /Y %outputPath%\AudioWhisper.runtimeconfig.json %op%
-COPY /B /Y %outputPath%\NAudio.Asio.dll %op%
-COPY /B /Y %outputPath%\NAudio.Core.dll %op%
-COPY /B /Y %outputPath%\NAudio.dll %op%
-COPY /B /Y %outputPath%\NAudio.Midi.dll %op%
-COPY /B /Y %outputPath%\NAudio.Wasapi.dll %op%
-COPY /B /Y %outputPath%\NAudio.WinMM.dll %op%
-makensis.exe %op%\script.nsi
+SET "outputPath=.\nsis"
+SET "inputPath=.\bin\Debug\net7.0\publish"
+
+COPY /Y .\src\json\save.json %outputPath%
+RENAME %outputPath%\save.json backup_save.json
+COPY /Y .\src\json\save.json %outputPath%
+COPY /Y license.txt %outputPath%
+COPY /Y AudioWhisper.ico %outputPath%
+COPY /Y %inputPath%\AudioWhisper.exe %outputPath%
+COPY /Y %inputPath%\AudioWhisper.dll %outputPath%
+COPY /Y %inputPath%\AudioWhisper.deps.json %outputPath%
+COPY /Y %inputPath%\AudioWhisper.dll %outputPath%
+COPY /Y %inputPath%\AudioWhisper.exe %outputPath%
+COPY /Y %inputPath%\AudioWhisper.pdb %outputPath%
+COPY /Y %inputPath%\AudioWhisper.runtimeconfig.json %outputPath%
+COPY /Y %inputPath%\NAudio.Asio.dll %outputPath%
+COPY /Y %inputPath%\NAudio.Core.dll %outputPath%
+COPY /Y %inputPath%\NAudio.dll %outputPath%
+COPY /Y %inputPath%\NAudio.Midi.dll %outputPath%
+COPY /Y %inputPath%\NAudio.Wasapi.dll %outputPath%
+COPY /Y %inputPath%\NAudio.WinMM.dll %outputPath%
+makensis.exe %outputPath%\script.nsi
 IF NOT EXIST ".\build\" MKDIR .\build\
 COPY /B /Y .\nsis\AudioWhisper-Setup.exe .\build\
-ECHO EXECUTABLE CAN BE FOUND IN build\
+ECHO ^|=================================^|
+ECHO ^|"AudioWhisper-Setup.exe" COMPILED^|
+ECHO ^|:::::::::::::::::::::::::::::::::^|
+ECHO ^|EXECUTABLE CAN BE FOUND IN build\^|
+ECHO ^|=================================^|

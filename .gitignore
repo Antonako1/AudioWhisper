@@ -10,6 +10,7 @@ nsis/*
 !nsis/Setup.ps1
 !nsis/Uninstall.ps1
 build/
+mem
 
 # OTHER
 save.json

@@ -6,7 +6,9 @@ class Program {
     public static string appdata_location = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Temp\\temp_AudioWhisper_mic_playback\\";
     private static File_reader? json_file_reader = new();
     private JsonObject settings = json_file_reader?.data;
+    
     static void Main(string[] args) {
+        
         // Create new folder
         System.IO.Directory.CreateDirectory(appdata_location);
         EmptyDir();
@@ -36,7 +38,10 @@ class Program {
                 // if agree
                 string _temp_quick_message = "'old_save.json' file found in base directory. Change current settings to old ones? (y/n) \nThis message can be disabled in the settings"; 
                 bool running = true;
+                Console.BackgroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine(_temp_quick_message);
+                Console.ResetColor();
                 while (running){
                     var key = Console.ReadKey().Key;
                     switch (key){
@@ -53,7 +58,10 @@ class Program {
                             break;
                         default:
                             Console.Clear();
+                            Console.BackgroundColor = ConsoleColor.Red;
+                            Console.ForegroundColor = ConsoleColor.White;
                             Console.WriteLine(_temp_quick_message);
+                            Console.ResetColor();
                             break;
                     }
                 }
@@ -89,6 +97,7 @@ class Program {
                     break;
                 case ConsoleKey.D3:
                     json_file_reader?.Cli();
+                    json_file_reader.Read_file();
                     settings = json_file_reader?.data;
                     Console_writing("main");
                     if(playing){
