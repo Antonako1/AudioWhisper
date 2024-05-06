@@ -11,6 +11,7 @@
    - 1 = Edit values
    - 2 = Help message
    - 3 = Return
+ - F7 = Toggle playback while app is out of focus
  - Q = Exit program
 
  --- 

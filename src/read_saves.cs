@@ -445,7 +445,7 @@ class File_reader{
         Console.Clear();
         Console.BackgroundColor = ConsoleColor.Black;
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"AudioWhisper 1.0.2. Active: {Global.playing}");
+        Console.WriteLine($"AudioWhisper 1.1.0.4. Active: {Global.playing}");
         Console.BackgroundColor = ConsoleColor.Black;
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine("Currently in:");

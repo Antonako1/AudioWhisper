@@ -16,8 +16,8 @@ Var /GLOBAL switch_overwrite
 Outfile "AudioWhisper-Setup.exe"
 RequestExecutionLevel admin
 
-BrandingText /TRIMCENTER "AudioWhisper 1.0.2 Setup"
-Name "AudioWhisper 1.0.2 Setup"
+BrandingText /TRIMCENTER "AudioWhisper 1.1.0.4 Setup"
+Name "AudioWhisper 1.1.0.4 Setup"
 ManifestSupportedOS Win10
 DetailsButtonText "Show progress"
 
@@ -52,61 +52,6 @@ SectionGroup "!Main Program" RO
         SectionInstType ${IT_FULL} ${IT_MIN} RO
         SectionIn 1 ${sec1_id}
         File "license.txt"
-    SectionEnd
-    Section !AudioWhisper.dll sec2_id
-        SectionInstType ${IT_FULL} ${IT_MIN} RO
-        SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
-        File "AudioWhisper.dll"
-    SectionEnd
-
-    Section !AudioWhisper.deps.json sec10_id
-        SectionInstType ${IT_FULL} ${IT_MIN} RO
-        SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
-        File "AudioWhisper.deps.json"
-    SectionEnd
-    Section !AudioWhisper.runtimeconfig.json sec11_id
-        SectionInstType ${IT_FULL} ${IT_MIN} RO
-        SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
-        File "AudioWhisper.runtimeconfig.json"
-    SectionEnd
-    Section !NAudio.Asio.dll sec12_id
-        SectionInstType ${IT_FULL} ${IT_MIN} RO
-        SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
-        File "NAudio.Asio.dll"
-    SectionEnd
-    Section !NAudio.Core.dll sec13_id
-        SectionInstType ${IT_FULL} ${IT_MIN} RO
-        SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
-        File "NAudio.Core.dll"
-    SectionEnd
-    Section !NAudio.dll sec14_id
-        SectionInstType ${IT_FULL} ${IT_MIN} RO
-        SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
-        File "NAudio.dll"
-    SectionEnd
-    Section !NAudio.Midi.dll sec15_id
-        SectionInstType ${IT_FULL} ${IT_MIN} RO
-        SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
-        File "NAudio.Midi.dll"
-    SectionEnd
-    Section !NAudio.Wasapi.dll sec16_id
-        SectionInstType ${IT_FULL} ${IT_MIN} RO
-        SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
-        File "NAudio.Wasapi.dll"
-    SectionEnd
-    Section !NAudio.WinMM.dll sec17_id
-        SectionInstType ${IT_FULL} ${IT_MIN} RO
-        SectionIn 1 ${sec1_id}
-        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
-        File "NAudio.WinMM.dll"
     SectionEnd
     Section !AudioWhisper.ico sec18_id
         SectionInstType ${IT_FULL} ${IT_MIN} RO
@@ -192,19 +137,10 @@ Section
 ; Delete the $TEMP folder stuff before extracting more files
 ; and taking up more space from the disk
 Delete "$TEMP\temp_AudioWhisper_mic_playback\AudioWhisper.exe"
-Delete "$TEMP\temp_AudioWhisper_mic_playback\AudioWhisper.dll"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\license.txt"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\Uninstall.exe"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\Setup.ps1"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\Uninstall.ps1"
-Delete "$TEMP\temp_AudioWhisper_mic_playback\AudioWhisper.deps.json"
-Delete "$TEMP\temp_AudioWhisper_mic_playback\AudioWhisper.runtimeconfig.json"
-Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.Asio.dll"
-Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.Core.dll"
-Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.dll"
-Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.Midi.dll"
-Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.Wasapi.dll"
-Delete "$TEMP\temp_AudioWhisper_mic_playback\NAudio.WinMM.dll"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\save.json"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\backup_save.json"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\AudioWhisper.ico"
@@ -293,38 +229,11 @@ ${EndIf}
 ${If} ${SectionIsSelected} ${sec1_id}
     File "AudioWhisper.exe"
 ${EndIf}
-${If} ${SectionIsSelected} ${sec2_id}
-    File "AudioWhisper.dll"
-${EndIf}
 
 ${If} ${SectionIsSelected} ${sec7_id}
     File "license.txt"
 ${EndIf}
 
-${If} ${SectionIsSelected} ${sec10_id}
-    File "AudioWhisper.deps.json"
-${EndIf}
-${If} ${SectionIsSelected} ${sec11_id}
-    File "AudioWhisper.runtimeconfig.json"
-${EndIf}
-${If} ${SectionIsSelected} ${sec12_id}
-    File "NAudio.Asio.dll"
-${EndIf}
-${If} ${SectionIsSelected} ${sec13_id}
-    File "NAudio.Core.dll"
-${EndIf}
-${If} ${SectionIsSelected} ${sec14_id}
-    File "NAudio.dll"
-${EndIf}
-${If} ${SectionIsSelected} ${sec15_id}
-    File "NAudio.Midi.dll"
-${EndIf}
-${If} ${SectionIsSelected} ${sec16_id}
-    File "NAudio.Wasapi.dll"
-${EndIf}
-${If} ${SectionIsSelected} ${sec17_id}
-    File "NAudio.WinMM.dll"
-${EndIf}
 ${If} ${SectionIsSelected} ${sec18_id}
     File "AudioWhisper.ico"
 ${EndIf}
@@ -368,19 +277,10 @@ nsExec::ExecToLog 'Powershell.exe -ExecutionPolicy Bypass -File "$INSTDIR\Uninst
 
 Delete "$INSTDIR\AudioWhisper.exe"
 Delete "$INSTDIR\save.json"
-Delete "$INSTDIR\AudioWhisper.dll"
 Delete "$INSTDIR\Uninstall.exe"
 Delete "$INSTDIR\license.txt"
 Delete "$INSTDIR\Uninstall.ps1"
 Delete "$INSTDIR\Setup.ps1"
-Delete "$INSTDIR\AudioWhisper.deps.json"
-Delete "$INSTDIR\AudioWhisper.runtimeconfig.json"
-Delete "$INSTDIR\NAudio.Asio.dll"
-Delete "$INSTDIR\NAudio.Core.dll"
-Delete "$INSTDIR\NAudio.dll"
-Delete "$INSTDIR\NAudio.Midi.dll"
-Delete "$INSTDIR\NAudio.Wasapi.dll"
-Delete "$INSTDIR\NAudio.WinMM.dll"
 Delete "$INSTDIR\AudioWhisper.ico"
 Delete "$INSTDIR\save.json"
 Delete "$INSTDIR\old_save.json"

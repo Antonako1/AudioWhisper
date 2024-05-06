@@ -1,7 +1,7 @@
 using NAudio.Wave;
 using NAudio.Dsp;
 using System;
-
+using SharpHook;
 class Program {
     public static string appdata_location = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Temp\\temp_AudioWhisper_mic_playback\\";
     private static File_reader? json_file_reader = new();
@@ -11,7 +11,15 @@ class Program {
         
         // Create new folder
         System.IO.Directory.CreateDirectory(appdata_location);
-        EmptyDir();
+        try{
+            EmptyDir();
+        } catch (Exception e){
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Error. Audio file may be in use or the executable doesn't have permissions to read/write it: " + e.Message);
+            Console.ResetColor();
+            Environment.Exit(1);
+        }
         Console.Clear();
         Program audioplayer = new();
     }
@@ -29,8 +37,9 @@ class Program {
     private static WaveOutEvent? player;
     private static bool playing = false;
     private static SavingWaveProvider? filterSampleProvider;
+    private SharpHook.Native.KeyCode? hookKeyPress;
 
-    private static readonly string help_message = "Press '1' to start, '2' to stop, '3' to edit settings, 'Q' to exit.";
+    private static readonly string help_message = "Press '1' to start, '2' to stop, '3' to edit settings, 'F7' to toggle mic playback while out of focus, 'Q' to exit.";
     public Program(){
         // CHECK IF old_save.json EXISTS
         if(settings.QuietStartMessage == false){
@@ -77,7 +86,30 @@ class Program {
             EmptyDir();
             StartRecording();
         }
+        // Init hook
+        InitializeSharpHook();
         while (true){
+            // First try hook presses
+            // switch(hookKeyPress){
+            //     case SharpHook.Native.KeyCode.VcF7:
+            //         if(playing){
+            //             playing = true;
+            //             Global.playing = playing;
+            //             StopRecording();
+            //             EmptyDir();
+            //             StartRecording();
+            //             Console_writing("main");
+            //         }
+            //         else{
+            //             playing = false;
+            //             Global.playing = playing;
+            //             StopRecording();
+            //             EmptyDir();
+            //             Console_writing("main");
+            //         }
+            //         continue;
+            // }
+
             var key = Console.ReadKey().Key;
             switch (key){
                 case ConsoleKey.D1:
@@ -111,10 +143,12 @@ class Program {
                     EmptyDir();
                     Environment.Exit(0);
                     break;
+                case ConsoleKey.F7: break; // fallthrough
                 default:
                     Console_writing("error");
                     break;
             }
+            // hookKeyPress = null;
         }
     }
 
@@ -189,7 +223,7 @@ class Program {
         Console.Clear(); 
         Console.BackgroundColor = ConsoleColor.Black;
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"AudioWhisper 1.0.2. Active: {Global.playing}");
+        Console.WriteLine($"AudioWhisper 1.1.0.4. Active: {Global.playing}");
         Console.BackgroundColor = ConsoleColor.Black;
         Console.ForegroundColor = ConsoleColor.Blue;
         Console.WriteLine("Currently in:");
@@ -211,5 +245,31 @@ class Program {
         }
         Console.ResetColor();
     }
+    private void OnKeyReleased(object? sender, KeyboardHookEventArgs e){
+        switch(e.Data.KeyCode){
+            case SharpHook.Native.KeyCode.VcF7:
+                if(!playing){
+                    playing = true;
+                    Global.playing = playing;
+                    StopRecording();
+                    EmptyDir();
+                    StartRecording();
+                    Console_writing("main");
+                }
+                else{
+                    playing = false;
+                    Global.playing = playing;
+                    StopRecording();
+                    EmptyDir();
+                    Console_writing("main");
+                }
+                break;
+        }
+    }
+    private async void InitializeSharpHook(){
+        var hook = new TaskPoolGlobalHook();
+        hook.KeyReleased += OnKeyReleased;     // EventHandler<KeyboardHookEventArgs>
+        await hook.RunAsync();
+    }  
 }
 

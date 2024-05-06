@@ -11,5 +11,7 @@
   <ItemGroup>
     <PackageReference Include="NAudio" Version="2.2.1" />
   </ItemGroup>
-  
+  <ItemGroup>
+    <PackageReference Include="SharpHook" Version="5.3.2" />
+  </ItemGroup>
 </Project>
