@@ -59,13 +59,19 @@ SectionGroup "!Main Program" RO
         SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
         File "AudioWhisper.ico"
     SectionEnd
-    Section !save.json sec19_id
+    Section !save.json20 sec19_id
         SectionInstType ${IT_FULL} ${IT_MIN} RO
         SectionIn 1 ${sec1_id}
         SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
         File "save.json"
     SectionEnd
     Section !backup_save.json sec20_id
+        SectionInstType ${IT_FULL} ${IT_MIN} RO
+        SectionIn 1 ${sec1_id}
+        SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
+        File "backup_save.json"
+    SectionEnd
+    Section !uiohook.dll sec99_id
         SectionInstType ${IT_FULL} ${IT_MIN} RO
         SectionIn 1 ${sec1_id}
         SetOutPath "$TEMP\temp_AudioWhisper_mic_playback"
@@ -137,6 +143,7 @@ Section
 ; Delete the $TEMP folder stuff before extracting more files
 ; and taking up more space from the disk
 Delete "$TEMP\temp_AudioWhisper_mic_playback\AudioWhisper.exe"
+Delete "$TEMP\temp_AudioWhisper_mic_playback\uiohook.dll"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\license.txt"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\Uninstall.exe"
 Delete "$TEMP\temp_AudioWhisper_mic_playback\Setup.ps1"
@@ -240,8 +247,11 @@ ${EndIf}
 ${If} ${SectionIsSelected} ${sec19_id}
     File "save.json"
 ${EndIf}
-${If} ${SectionIsSelected} ${sec19_id}
+${If} ${SectionIsSelected} ${sec20_id}
     File "backup_save.json"
+${EndIf}
+${If} ${SectionIsSelected} ${sec99_id}
+    File "uiohook.dll"
 ${EndIf}
 
 # Create shortcut on DESKTOP
@@ -277,12 +287,12 @@ nsExec::ExecToLog 'Powershell.exe -ExecutionPolicy Bypass -File "$INSTDIR\Uninst
 
 Delete "$INSTDIR\AudioWhisper.exe"
 Delete "$INSTDIR\save.json"
+Delete "$INSTDIR\uiohook.dll"
 Delete "$INSTDIR\Uninstall.exe"
 Delete "$INSTDIR\license.txt"
 Delete "$INSTDIR\Uninstall.ps1"
 Delete "$INSTDIR\Setup.ps1"
 Delete "$INSTDIR\AudioWhisper.ico"
-Delete "$INSTDIR\save.json"
 Delete "$INSTDIR\old_save.json"
 Delete "$INSTDIR\backup_save.json"
 Delete "$DESKTOP\AudioWhisper.lnk"

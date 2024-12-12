@@ -8,6 +8,7 @@ COPY /Y .\src\json\save.json %outputPath%
 COPY /Y license.txt %outputPath%
 COPY /Y AudioWhisper.ico %outputPath%
 COPY /Y %inputPath%\AudioWhisper.exe %outputPath%
+COPY /Y %inputPath%\*.dll %outputPath%
 makensis.exe %outputPath%\script.nsi
 IF NOT EXIST ".\build\" MKDIR .\build\
 COPY /B /Y .\nsis\AudioWhisper-Setup.exe .\build\
